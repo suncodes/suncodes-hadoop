@@ -1,12 +1,10 @@
 package suncodes;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.math3.util.MathArrays;
+
 import org.apache.commons.math3.util.MathUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Hdfs;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -14,17 +12,62 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.filecache.DistributedCache;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class WordCountJobSubmitter {
 
-    private static Logger logger = LoggerFactory.getLogger(WordCountJobSubmitter.class);
+public class WordCountJobTools extends Configured implements Tool {
+
+    private static Logger logger = LoggerFactory.getLogger(WordCountJobTools.class);
+
+    private static Configuration conf = new Configuration();
+
+    @Override
+    public int run(String[] args) throws Exception {
+        logger.info(">>>>>>>>>>>>");
+        System.out.println(MathUtils.equals(1.0, 2.0));
+        System.setProperty("HADOOP_USER_NAME", "root");
+
+        FileSystem fileSystem = FileSystem.get(conf);
+        Path output = new Path("hdfs://192.168.6.110:9000/user/scz/mapreduce/output/");
+        if (fileSystem.exists(output)) {
+            fileSystem.delete(output, true);
+        }
+
+        Job wordCountJob = Job.getInstance(conf);
+
+        //重要：指定本job所在的jar包
+        wordCountJob.setJarByClass(WordCountJobTools.class);
+
+        //设置wordCountJob所用的mapper逻辑类为哪个类
+        wordCountJob.setMapperClass(WordCountMapper.class);
+        //设置wordCountJob所用的reducer逻辑类为哪个类
+        wordCountJob.setReducerClass(WordCountReducer.class);
+
+        //设置map阶段输出的kv数据类型
+        wordCountJob.setMapOutputKeyClass(Text.class);
+        wordCountJob.setMapOutputValueClass(IntWritable.class);
+
+        //设置最终输出的kv数据类型
+        wordCountJob.setOutputKeyClass(Text.class);
+        wordCountJob.setOutputValueClass(IntWritable.class);
+
+        //设置要处理的文本数据所存放的路径
+        FileInputFormat.setInputPaths(wordCountJob,
+                "hdfs://192.168.6.110:9000/user/scz/mapreduce/input/");
+        FileOutputFormat.setOutputPath(wordCountJob, output);
+
+        //提交job给hadoop集群
+        wordCountJob.waitForCompletion(true);
+        return 0;
+    }
+
     /**
      * KEYIN：输入kv数据对中key的数据类型
      * VALUEIN：输入kv数据对中value的数据类型
@@ -42,7 +85,6 @@ public class WordCountJobSubmitter {
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             logger.info("进入map方法了");
-            System.out.println(MathUtils.equals(1.0, 2.0));
             //拿到一行文本内容，转换成String 类型
             String line = value.toString();
             //将这行文本切分成单词
@@ -92,57 +134,8 @@ public class WordCountJobSubmitter {
         }
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
-        logger.info(">>>>>>>>>>>>");
-
-        Configuration conf = new Configuration();
-        System.setProperty("HADOOP_USER_NAME", "root");
-
-        FileSystem fileSystem = FileSystem.get(conf);
-
-        // 遍历指定目录下的jar包，并添加到缓存中（HDFS下的文件）
-//        FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/user/scz/mapreduce/lib/"));
-//        for (FileStatus fileStatus : fileStatuses) {
-//            DistributedCache.addArchiveToClassPath(fileStatus.getPath(), conf, fileSystem);
-//        }
-
-        Path output = new Path("hdfs://192.168.6.110:9000/user/scz/mapreduce/output/");
-        if (fileSystem.exists(output)) {
-            fileSystem.delete(output, true);
-        }
-
-        Job wordCountJob = Job.getInstance(conf);
-        String jarPath = "/user/scz/mapreduce/lib/";
-        FileStatus[] fileStatuses = fileSystem.listStatus(new Path(jarPath));
-        for (FileStatus fileStatus : fileStatuses) {
-            System.out.println(jarPath + fileStatus.getPath().getName());
-            wordCountJob.addArchiveToClassPath(new Path(jarPath + fileStatus.getPath().getName()));
-            logger.info("{}", fileStatus.getPath());
-        }
-        logger.info("==========================");
-//        System.out.println(MathUtils.equals(1.0, 2.0));
-        //重要：指定本job所在的jar包
-        wordCountJob.setJarByClass(WordCountJobSubmitter.class);
-
-        //设置wordCountJob所用的mapper逻辑类为哪个类
-        wordCountJob.setMapperClass(WordCountMapper.class);
-        //设置wordCountJob所用的reducer逻辑类为哪个类
-        wordCountJob.setReducerClass(WordCountReducer.class);
-
-        //设置map阶段输出的kv数据类型
-        wordCountJob.setMapOutputKeyClass(Text.class);
-        wordCountJob.setMapOutputValueClass(IntWritable.class);
-
-        //设置最终输出的kv数据类型
-        wordCountJob.setOutputKeyClass(Text.class);
-        wordCountJob.setOutputValueClass(IntWritable.class);
-
-        //设置要处理的文本数据所存放的路径
-        FileInputFormat.setInputPaths(wordCountJob,
-                "hdfs://192.168.6.110:9000/user/scz/mapreduce/input/");
-        FileOutputFormat.setOutputPath(wordCountJob, output);
-
-        //提交job给hadoop集群
-        wordCountJob.waitForCompletion(true);
+    public static void main(String[] args) throws Exception {
+        int res = ToolRunner.run(conf, new WordCountJobTools(), args);
+        System.exit(res);
     }
 }
