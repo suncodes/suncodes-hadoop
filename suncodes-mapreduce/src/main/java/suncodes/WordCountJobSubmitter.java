@@ -42,7 +42,7 @@ public class WordCountJobSubmitter {
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             logger.info("进入map方法了");
-            System.out.println(MathUtils.equals(1.0, 2.0));
+//            System.out.println(MathUtils.equals(1.0, 2.0));
             //拿到一行文本内容，转换成String 类型
             String line = value.toString();
             //将这行文本切分成单词
@@ -140,6 +140,8 @@ public class WordCountJobSubmitter {
         //设置要处理的文本数据所存放的路径
         FileInputFormat.setInputPaths(wordCountJob,
                 "hdfs://192.168.6.110:9000/user/scz/mapreduce/input/");
+        FileInputFormat.setMinInputSplitSize(wordCountJob, 1);
+        FileInputFormat.setMaxInputSplitSize(wordCountJob, 1);
         FileOutputFormat.setOutputPath(wordCountJob, output);
 
         //提交job给hadoop集群
