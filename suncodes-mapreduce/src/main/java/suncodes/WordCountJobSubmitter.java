@@ -42,7 +42,7 @@ public class WordCountJobSubmitter {
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             logger.info("进入map方法了");
-//            System.out.println(MathUtils.equals(1.0, 2.0));
+            System.out.println(MathUtils.equals(1.0, 2.0));
             //拿到一行文本内容，转换成String 类型
             String line = value.toString();
             //将这行文本切分成单词
@@ -116,7 +116,7 @@ public class WordCountJobSubmitter {
         FileStatus[] fileStatuses = fileSystem.listStatus(new Path(jarPath));
         for (FileStatus fileStatus : fileStatuses) {
             System.out.println(jarPath + fileStatus.getPath().getName());
-            wordCountJob.addArchiveToClassPath(new Path(jarPath + fileStatus.getPath().getName()));
+            wordCountJob.addFileToClassPath(new Path(jarPath + fileStatus.getPath().getName()));
             logger.info("{}", fileStatus.getPath());
         }
         logger.info("==========================");
@@ -143,7 +143,7 @@ public class WordCountJobSubmitter {
         FileInputFormat.setMinInputSplitSize(wordCountJob, 1);
         FileInputFormat.setMaxInputSplitSize(wordCountJob, 1);
         FileOutputFormat.setOutputPath(wordCountJob, output);
-
+//        wordCountJob.setNumReduceTasks(1);
         //提交job给hadoop集群
         wordCountJob.waitForCompletion(true);
     }
