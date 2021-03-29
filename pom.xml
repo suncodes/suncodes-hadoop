@@ -13,6 +13,7 @@
         <module>suncodes-hdfs-v2</module>
         <module>suncodes-mapreduce</module>
         <module>suncodes-jedis</module>
+        <module>suncodes-hbase</module>
     </modules>
 
     <properties>
