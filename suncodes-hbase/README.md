@@ -365,3 +365,12 @@ public class DeleteData {
 }
 
 ```
+
+### 微博涉及的表
+
+```shell script
+create_namespace 'weibo';
+create 'weibo:content','info';
+create 'weibo:relation','attends','fans';
+create 'weibo:inbox',{COLUMN=>'info',VERSIONS=>3};
+```
