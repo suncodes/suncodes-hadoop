@@ -13,20 +13,27 @@ import org.apache.zookeeper.data.Id;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class CreateNode {
     public static void main(String[] args) throws IOException, InterruptedException, KeeperException {
-        ZooKeeper zooKeeper = new ZooKeeper("192.168.6.110", 2181, new Watcher() {
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        ZooKeeper zooKeeper = new ZooKeeper("192.168.6.110:2181", 100000, new Watcher() {
             @Override
             public void process(WatchedEvent watchedEvent) {
-                System.out.println("连接成功");
-                System.out.println(watchedEvent.getState());
-                System.out.println(watchedEvent.getType());
+                // 异步连接
+                if (watchedEvent.getState() == Event.KeeperState.SyncConnected) {
+                    System.out.println("连接成功");
+                    System.out.println(watchedEvent.getState());
+                    System.out.println(watchedEvent.getType());
+                    countDownLatch.countDown();
+                }
             }
         });
+        countDownLatch.await();
 
-        // 创建节点
+        // 创建节点，持久，临时，持久有序，临时有序
         // OPEN_ACL_UNSAFE : 完全开放的ACL，任何连接的客户端都可以操作该属性znode
         // CREATOR_ALL_ACL : 只有创建者才有ACL权限
         // READ_ACL_UNSAFE ：只能读取ACL
@@ -54,7 +61,7 @@ public class CreateNode {
 
         // digest
         List<ACL> aclList3 = new ArrayList<>();
-        Id id3 = new Id("digest", "itcast:qUFSHxJjItUW/93UHFXFVGlvryY=");
+        Id id3 = new Id("digest", "scz:9xttSaRZ9/yCWkZEbZeRn+7S3T0=");
         aclList3.add(new ACL(ZooDefs.Perms.ALL, id3));
         String node5 = zooKeeper.create("/node5", "node5".getBytes(), aclList3, CreateMode.PERSISTENT);
         System.out.println(node5);
@@ -73,7 +80,7 @@ public class CreateNode {
                         System.out.println(i + "" + s + "" + s1 + "" + o);
                     }
                 }, "I am context");
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(3);
         System.out.println("结束");
         zooKeeper.close();
     }
