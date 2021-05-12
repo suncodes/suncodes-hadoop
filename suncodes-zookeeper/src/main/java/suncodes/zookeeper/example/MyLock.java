@@ -3,11 +3,13 @@ package suncodes.zookeeper.example;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * 分布式锁
+ */
 public class MyLock {
     /** zk的连接串 */
     private static final String IP = "192.168.6.110:2181";
