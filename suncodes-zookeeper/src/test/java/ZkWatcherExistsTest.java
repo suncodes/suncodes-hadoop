@@ -7,6 +7,13 @@ import suncodes.zookeeper.ZKWatcherExists;
 
 import java.io.*;
 
+/**
+ * exists(String path, boolean b)
+ * exists(String path, Watcher w)
+ * NodeCreated：节点创建
+ * NodeDeleted：节点删除
+ * NodeDataChanged：节点内容
+ */
 public class ZkWatcherExistsTest {
 
     private ZooKeeper zooKeeper;
@@ -23,6 +30,7 @@ public class ZkWatcherExistsTest {
 
     @Test
     public void f2() throws KeeperException, InterruptedException {
+        // 运行后，手动在linux下创建节点，查看监听变化
         new ZKWatcherExists().watcherExists1(zooKeeper);
     }
 

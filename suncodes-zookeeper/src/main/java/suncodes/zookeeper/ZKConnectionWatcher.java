@@ -1,9 +1,6 @@
 package suncodes.zookeeper;
 
-import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.*;
 
 import java.io.*;
 import java.util.concurrent.CountDownLatch;
@@ -39,10 +36,25 @@ public class ZKConnectionWatcher {
 
         countDownLatch.await();
         System.out.println(zooKeeper.getSessionId());
+
+        String node1 = zooKeeper.create("/node1", "node1".getBytes(), ZooDefs.Ids.READ_ACL_UNSAFE, CreateMode.PERSISTENT);
+        System.out.println(node1);
+
         zooKeeper.addAuthInfo("digest", "scz:scz".getBytes());
         byte[] data = zooKeeper.getData("/node1", false, null);
         System.out.println(new String(data));
         TimeUnit.SECONDS.sleep(5);
+
+        System.out.println("===========================");
+
+        String node2 = zooKeeper.create("/node2", "node22".getBytes(), ZooDefs.Ids.CREATOR_ALL_ACL, CreateMode.PERSISTENT);
+        System.out.println(node2);
+
+        zooKeeper.addAuthInfo("digest", "scz1:scz1".getBytes());
+        byte[] data2 = zooKeeper.getData("/node2", false, null);
+        System.out.println(new String(data2));
+        TimeUnit.SECONDS.sleep(5);
+
         zooKeeper.close();
         System.out.println("结束");
     }

@@ -61,7 +61,7 @@ public class ZKWatcherExists {
                 System.out.println("自定义watcher对象");
                 System.out.println("path: " + watchedEvent.getPath());
                 System.out.println("eventType: " + watchedEvent.getType());
-                // ???????
+                // 通过递归，可以在监听器响应事件后，再次注册监听器，从而解决一次性的问题
                 try {
                     zooKeeper.exists("/watcher1", this);
                 } catch (KeeperException | InterruptedException e) {
@@ -70,13 +70,15 @@ public class ZKWatcherExists {
             }
         };
         zooKeeper.exists("/watcher1", watcher);
+        // 虽然注册了两次，但是注册的是同一个监听器，可忽略
         zooKeeper.exists("/watcher1", watcher);
+        // 如果睡眠时间太长，则连接就直接断开了
         Thread.sleep(50000);
         System.out.println("结束");
     }
 
     public void watcherExists4(ZooKeeper zooKeeper) throws KeeperException, InterruptedException {
-        // 注册多个监听器
+        // 注册多个监听器，一次性的
         // arg1:节点的路径
         // arg2:自定义watcher对象
         zooKeeper.exists("/watcher1", new Watcher() {

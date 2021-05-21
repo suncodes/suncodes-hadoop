@@ -60,7 +60,7 @@ public class ZKWatcherGetData {
                 System.out.println("自定义watcher对象");
                 System.out.println("path: " + watchedEvent.getPath());
                 System.out.println("eventType: " + watchedEvent.getType());
-                // ???????
+                // 通过递归，可以在监听器响应事件后，再次注册监听器，从而解决一次性的问题
                 try {
                     zooKeeper.getData("/watcher2", this, null);
                 } catch (KeeperException | InterruptedException e) {
@@ -69,13 +69,12 @@ public class ZKWatcherGetData {
             }
         };
         zooKeeper.getData("/watcher2", watcher, null);
-        zooKeeper.getData("/watcher2", watcher, null);
         Thread.sleep(50000);
         System.out.println("结束");
     }
 
     public void watcherGetData4(ZooKeeper zooKeeper) throws KeeperException, InterruptedException {
-        // 注册多个监听器
+        // 注册多个监听器，且解决一次性问题
         // arg1:节点的路径
         // arg2:自定义watcher对象
         zooKeeper.getData("/watcher2", new Watcher() {

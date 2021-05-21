@@ -5,26 +5,26 @@ import org.apache.zookeeper.ZooKeeper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import suncodes.zookeeper.CreateNode;
-import suncodes.zookeeper.ZKWatcherGetData;
+import suncodes.zookeeper.ZKWatcherGetChild;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
- * getData
- * getData(String path, boolean b, Stat stat)
- * getData(String path, Watcher w, Stat stat)
+ * getChildren
+ * getChildren(String path, boolean b)
+ * getChildren(String path, Watcher w)
+ * NodeChildrenChanged：子节点发生变化（子节点增删）
  * NodeDeleted：节点删除
- * NodeDataChange：节点内容发生变化
  */
-public class ZKWatcherGetDataTest {
+public class ZKWatcherGetChildTest {
+
     private ZooKeeper zooKeeper;
 
     @Before
     public void f() throws IOException, InterruptedException, KeeperException {
-        zooKeeper = new ZKWatcherGetData().getZK();
-        if (zooKeeper.exists("/watcher2", false) == null) {
-            zooKeeper.create("/watcher2", "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        zooKeeper = new ZKWatcherGetChild().getZK();
+        if (zooKeeper.exists("/watcher3", false) == null) {
+            zooKeeper.create("/watcher3", "".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
         }
     }
 
@@ -36,21 +36,23 @@ public class ZKWatcherGetDataTest {
     @Test
     public void f2() throws KeeperException, InterruptedException {
         // 因为监听节点内容的时候，节点必须存在，所以就没有了创建节点事件
-        new ZKWatcherGetData().watcherGetData1(zooKeeper);
+        // create /watcher3/1 "1"
+        new ZKWatcherGetChild().watcherGetChild1(zooKeeper);
     }
 
     @Test
     public void f3() throws KeeperException, InterruptedException {
-        new ZKWatcherGetData().watcherGetData2(zooKeeper);
+        // set /watcher3/1 "1"
+        new ZKWatcherGetChild().watcherGetChild2(zooKeeper);
     }
 
     @Test
     public void f4() throws KeeperException, InterruptedException {
-        new ZKWatcherGetData().watcherGetData3(zooKeeper);
+        new ZKWatcherGetChild().watcherGetChild3(zooKeeper);
     }
 
     @Test
     public void f5() throws KeeperException, InterruptedException {
-        new ZKWatcherGetData().watcherGetData4(zooKeeper);
+        new ZKWatcherGetChild().watcherGetChild4(zooKeeper);
     }
 }

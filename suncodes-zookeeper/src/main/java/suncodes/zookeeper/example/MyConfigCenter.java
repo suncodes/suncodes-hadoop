@@ -40,8 +40,7 @@ public class MyConfigCenter implements Watcher {
                 } else if (event.getState() == Event.KeeperState.Expired) {
                     System.out.println("连接超时!");
                     // 超时后服务器端已经将连接释放，需要重新连接服务器端
-                    zooKeeper = new ZooKeeper("192.168.60.130:2181", 6000,
-                            new MyConfigCenter());
+                    zooKeeper = new ZooKeeper(IP, 6000, new MyConfigCenter());
                 } else if (event.getState() == Event.KeeperState.AuthFailed) {
                     System.out.println("验证失败!");
                 }

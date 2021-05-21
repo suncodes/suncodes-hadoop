@@ -38,7 +38,7 @@ public class ZKWatcherGetChild {
     public void watcherGetChild2(ZooKeeper zooKeeper) throws KeeperException, InterruptedException {
         // arg1:节点的路径
         // arg2:自定义watcher对象
-        zooKeeper.getChildren("/watcher2", new Watcher() {
+        zooKeeper.getChildren("/watcher3", new Watcher() {
             @Override
             public void process(WatchedEvent watchedEvent) {
                 System.out.println("自定义watcher对象");
@@ -62,14 +62,13 @@ public class ZKWatcherGetChild {
                 System.out.println("eventType: " + watchedEvent.getType());
                 // ???????
                 try {
-                    zooKeeper.getChildren("/watcher2", this);
+                    zooKeeper.getChildren("/watcher3", this);
                 } catch (KeeperException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         };
-        zooKeeper.getChildren("/watcher2", watcher, null);
-        zooKeeper.getChildren("/watcher2", watcher, null);
+        zooKeeper.getChildren("/watcher3", watcher, null);
         Thread.sleep(50000);
         System.out.println("结束");
     }
@@ -78,36 +77,36 @@ public class ZKWatcherGetChild {
         // 注册多个监听器
         // arg1:节点的路径
         // arg2:自定义watcher对象
-        zooKeeper.getChildren("/watcher2", new Watcher() {
+        zooKeeper.getChildren("/watcher3", new Watcher() {
             @Override
             public void process(WatchedEvent event) {
                 try {
                     System.out.println("1");
                     System.out.println("path=" + event.getPath());
                     System.out.println("eventType=" + event.getType());
-                    if(event.getType()==Event.EventType.NodeDataChanged) {
-                        zooKeeper.getChildren("/watcher2", this, null);
+                    if (event.getType() == Event.EventType.NodeChildrenChanged) {
+                        zooKeeper.getChildren("/watcher3", this, null);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-        },null);
-        zooKeeper.getChildren("/watcher2", new Watcher() {
+        }, null);
+        zooKeeper.getChildren("/watcher3", new Watcher() {
             @Override
             public void process(WatchedEvent event) {
                 try {
                     System.out.println("2");
                     System.out.println("path=" + event.getPath());
                     System.out.println("eventType=" + event.getType());
-                    if(event.getType()==Event.EventType.NodeDataChanged) {
-                        zooKeeper.getChildren("/watcher2", this, null);
+                    if (event.getType() == Event.EventType.NodeChildrenChanged) {
+                        zooKeeper.getChildren("/watcher3", this, null);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-        },null);
+        }, null);
         Thread.sleep(50000);
         System.out.println("结束");
     }
