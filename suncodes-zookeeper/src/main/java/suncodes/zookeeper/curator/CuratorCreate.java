@@ -15,10 +15,12 @@ import java.util.ArrayList;
 
 public class CuratorCreate {
 
+    private static final String CLUSTER_IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
+
     public CuratorFramework createzk() {
         RetryPolicy retryPolicy = new RetryOneTime(1000);
         CuratorFramework client = CuratorFrameworkFactory.builder()
-                .connectString("192.168.1.7:2181,192.168.1.7:2182,192.168.1.7:2183")
+                .connectString(CLUSTER_IP)
                 .sessionTimeoutMs(5000000)
                 .retryPolicy(retryPolicy)
                 .namespace("parent")
@@ -56,7 +58,7 @@ public class CuratorCreate {
                 // 节点的acl权限列表
                 .withACL(acls)
                 // arg1：节点路径，arg2：节点数据
-                .forPath("/zzzz", new byte[0]);
+                .forPath("/zzzz", "new byte[0]".getBytes());
     }
 
     /**
@@ -68,11 +70,11 @@ public class CuratorCreate {
                 // 递归创建
                 .creatingParentsIfNeeded()
                 // 节点的类型
-                .withMode(CreateMode.EPHEMERAL)
+                .withMode(CreateMode.PERSISTENT)
                 // 节点的acl权限列表
                 .withACL(ZooDefs.Ids.OPEN_ACL_UNSAFE)
                 // arg1：节点路径，arg2：节点数据
-                .forPath("/child/childzs", new byte[0]);
+                .forPath("/child/childzs", "childzs".getBytes());
     }
 
     /**

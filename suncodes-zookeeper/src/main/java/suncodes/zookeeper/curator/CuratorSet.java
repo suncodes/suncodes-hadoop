@@ -10,13 +10,15 @@ import org.apache.curator.retry.RetryOneTime;
 
 public class CuratorSet {
 
+    private static final String CLUSTER_IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
+
     public CuratorFramework createzk() {
         RetryPolicy retryPolicy = new RetryOneTime(1000);
         CuratorFramework client = CuratorFrameworkFactory.builder()
-                .connectString("192.168.1.7:2181,192.168.1.7:2182,192.168.1.7:2183")
+                .connectString(CLUSTER_IP)
                 .sessionTimeoutMs(5000000)
                 .retryPolicy(retryPolicy)
-                .namespace("settwo")
+//                .namespace("settwo")
                 .build();
         client.start();
         return client;

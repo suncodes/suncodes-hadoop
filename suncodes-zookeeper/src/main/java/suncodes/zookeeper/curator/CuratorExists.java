@@ -10,10 +10,12 @@ import org.apache.zookeeper.data.Stat;
 
 public class CuratorExists {
 
+    private static final String CLUSTER_IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
+
     public CuratorFramework createzk() {
         RetryPolicy retryPolicy = new RetryOneTime(1000);
         CuratorFramework client = CuratorFrameworkFactory.builder()
-                .connectString("192.168.1.7:2181,192.168.1.7:2182,192.168.1.7:2183")
+                .connectString(CLUSTER_IP)
                 .sessionTimeoutMs(5000000)
                 .retryPolicy(retryPolicy)
                 .namespace("settwo")
@@ -31,7 +33,11 @@ public class CuratorExists {
         Stat stat = client.checkExists()
                 // 节点路径
                 .forPath("/node2");
-        System.out.println(stat.getVersion());
+        if (stat == null) {
+            System.out.println("节点不存在");
+        } else {
+            System.out.println(stat.getVersion());
+        }
     }
 
 
@@ -46,7 +52,7 @@ public class CuratorExists {
                         System.out.println(curatorEvent.getPath());
                         // 事件类型
                         System.out.println(curatorEvent.getType());
-                        System.out.println(curatorEvent.getStat().getVersion());
+                        System.out.println(curatorEvent.getStat());
                     }
                 })
                 .forPath("/node2");

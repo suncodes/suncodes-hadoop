@@ -8,7 +8,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class CuratorWatcher {
 
-    private static final String IP = "192.168.60.130:2181,192.168.60.130:2182,192.168.60.130:2183";
+    private static final String IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
 
     public CuratorFramework createZK() {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);

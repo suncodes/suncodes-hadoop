@@ -6,6 +6,9 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
 
 public class CuratorConnection {
+
+    private static final String CLUSTER_IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
+
     public static void main(String[] args) {
         /**
          * 设置重连策略
@@ -27,7 +30,7 @@ public class CuratorConnection {
         RetryPolicy retryPolicy = new RetryOneTime(1000);
 
         CuratorFramework client = CuratorFrameworkFactory.builder()
-                .connectString("192.168.1.7:2181,192.168.1.7:2182,192.168.1.7:2183")
+                .connectString(CLUSTER_IP)
                 // 会话超时
                 .sessionTimeoutMs(5000)
                 // 重试机制，这里是超时后1000毫秒重试一次

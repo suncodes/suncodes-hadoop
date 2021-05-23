@@ -6,9 +6,13 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.api.transaction.CuratorOp;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
+/**
+ * 多个创建操作在同一个事务
+ * 要么都创建成功，要么均失败
+ */
 public class CuratorTransaction {
 
-    private static final String IP = "192.168.60.130:2181,192.168.60.130:2182,192.168.60.130:2183";
+    private static final String IP = "192.168.6.110:2182,192.168.6.111:2181,192.168.6.112:2181";
 
     public CuratorFramework createZK() {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
