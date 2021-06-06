@@ -15,6 +15,7 @@
         <module>suncodes-jedis</module>
         <module>suncodes-hbase</module>
         <module>suncodes-zookeeper</module>
+        <module>suncodes-hive</module>
     </modules>
 
     <properties>
