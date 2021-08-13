@@ -16,6 +16,7 @@
         <module>suncodes-hbase</module>
         <module>suncodes-zookeeper</module>
         <module>suncodes-hive</module>
+        <module>suncodes-yarn</module>
     </modules>
 
     <properties>
