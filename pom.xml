@@ -17,6 +17,7 @@
         <module>suncodes-zookeeper</module>
         <module>suncodes-hive</module>
         <module>suncodes-yarn</module>
+        <module>suncodes-flume</module>
     </modules>
 
     <properties>
