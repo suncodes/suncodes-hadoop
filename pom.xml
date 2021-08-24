@@ -18,6 +18,7 @@
         <module>suncodes-hive</module>
         <module>suncodes-yarn</module>
         <module>suncodes-flume</module>
+        <module>suncodes-kafka</module>
     </modules>
 
     <properties>
