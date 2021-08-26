@@ -19,6 +19,7 @@
         <module>suncodes-yarn</module>
         <module>suncodes-flume</module>
         <module>suncodes-kafka</module>
+        <module>suncodes-kafka-spring-xml</module>
     </modules>
 
     <properties>
@@ -38,12 +39,18 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
+
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
