@@ -20,6 +20,7 @@
         <module>suncodes-flume</module>
         <module>suncodes-kafka</module>
         <module>suncodes-kafka-spring-xml</module>
+        <module>suncodes-kafka-spring-annotation</module>
     </modules>
 
     <properties>
