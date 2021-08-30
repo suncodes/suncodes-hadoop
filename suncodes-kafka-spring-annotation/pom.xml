@@ -24,5 +24,29 @@
             <artifactId>spring-kafka</artifactId>
             <version>2.7.6</version>
         </dependency>
+
+
+        <!-- start 此处暂时注释掉，如果想要启动本地测试的kafka集群，则可以使用这块 -->
+        <!-- 使用的时候注释掉，上面的kafka 2.8.0 的依赖 -->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.kafka</groupId>-->
+<!--            <artifactId>spring-kafka-test</artifactId>-->
+<!--            <version>2.7.6</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-test</artifactId>-->
+<!--            <version>2.5.4</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+        <!-- end 此处暂时注释掉，如果想要启动本地测试的kafka集群，则可以使用这块 -->
+
+
+
+
     </dependencies>
 </project>
