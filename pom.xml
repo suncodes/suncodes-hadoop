@@ -21,6 +21,7 @@
         <module>suncodes-kafka</module>
         <module>suncodes-kafka-spring-xml</module>
         <module>suncodes-kafka-spring-annotation</module>
+        <module>suncodes-kafka-springboot</module>
     </modules>
 
     <properties>
